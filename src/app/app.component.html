@@ -1,0 +1,95 @@
+<canvas id="canvas3d" width="200" height="100" #canvas></canvas>
+
+<div class="controls">
+
+    <div class="control-container">
+        <!-- Рандом и презеты -->
+        <div [hidden]="currentState != randomizeState" class="randomize panel">
+            <!-- <div (click)="setSymbol(letter)" *ngFor="let letter of letters" class="letter-symbol">{{letter}}</div> -->
+
+            <a (click)="nextPreset()" class="btn">Preset</a>
+            <a (click)="restorePreset()" class="btn">Restore</a>
+
+            <a (click)="setDefaultState()" class="btn">Confirm</a>
+        </div>
+        <!-- Алфавит -->
+        <div [hidden]="currentState != chooseLetterState" class="choose-symbol panel">
+            <div (click)="setSymbol(letter)" *ngFor="let letter of letters" class="letter-symbol">{{letter}}</div>
+            <a (click)="setDefaultState()" class="btn padded">Confirm</a>
+        </div>
+        <!-- Поворот -->
+        <div [hidden]="currentState != rotateState" class="choose-rotation panel">
+            <div class="label">Rotation_Initial_{{rotation.z}}</div>
+            <nouislider [connect]="true" [min]="-180" [max]="180" [step]="1" [(ngModel)]="rotation.z" (ngModelChange)="onRotationChange($event)" class="slider"></nouislider>
+
+            <div class="label">Rotation_step_x_{{stepRotation.x}}</div>
+            <nouislider [connect]="true" [min]="0" [max]="20" [step]="1" [(ngModel)]="stepRotation.x" (ngModelChange)="onStepRotationChange($event)" class="slider"></nouislider>
+
+            <div class="label">Rotation_step_y_{{stepRotation.y}}</div>
+            <nouislider [connect]="true" [min]="0" [max]="20" [step]="1" [(ngModel)]="stepRotation.y" (ngModelChange)="onStepRotationChange($event)" class="slider"></nouislider>
+
+            <div class="label">Rotation_step_z_{{stepRotation.z}}</div>
+            <nouislider [connect]="true" [min]="0" [max]="20" [step]="1" [(ngModel)]="stepRotation.z" (ngModelChange)="onStepRotationChange($event)" class="slider"></nouislider>
+
+            <a (click)="setDefaultState()" class="btn">Confirm</a>
+        </div>
+        <!-- Изменение размера -->
+        <div [hidden]="currentState != growState" class="growing panel">
+            <div class="label">Growing_{{preset.scaleStep.x}}</div>
+            <nouislider [connect]="true" [min]="0" [max]="0.2" [step]="0.01" [(ngModel)]="preset.scaleStep.x" (ngModelChange)="onGrowChange($event)" class="slider"></nouislider>
+            <a (click)="setDefaultState()" class="btn">Confirm</a>
+        </div>
+        <!-- Цвета -->
+        <div [hidden]="currentState != materialState" class="choose-material panel">
+            <div class="material-probes">
+                <div (click)="setMaterial(color)" *ngFor="let color of colors" class="material-probe">
+                    <div [style.background-color]="color" class="probe-icon"></div>
+                </div>
+            </div>
+            <a (click)="setDefaultState()" class="btn padded">Confirm</a>
+        </div>
+        <!-- Количество букв -->
+        <div [hidden]="currentState != populationState" class="population panel">
+            <div class="label">Count_{{preset.countInCircle}}</div>
+            <nouislider [connect]="true" [min]="8" [max]="36" [step]="1" [(ngModel)]="preset.countInCircle" (ngModelChange)="onPopulationChange($event)" class="slider"></nouislider>
+            <a (click)="setDefaultState()" class="btn">Confirm</a>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div (click)="setState(randomizeState)" [ngClass]="{'active': currentState == randomizeState}" class="tab">
+            <i class="tab-icon icon-random"></i>
+            <a>Random</a>
+        </div>
+        <div (click)="setState(chooseLetterState)" [ngClass]="{'active': currentState == chooseLetterState}" class="tab">
+            <i class="tab-icon icon-letters"></i>
+            <a>Text</a>
+        </div>
+        <div (click)="setState(rotateState)" [ngClass]="{'active': currentState == rotateState}" class="tab">
+            <i class="tab-icon icon-rotate"></i>
+            <a>Rotate</a>
+        </div>
+        <div (click)="setState(growState)" [ngClass]="{'active': currentState == growState}" class="tab">
+            <i class="tab-icon icon-size"></i>
+            <a>Size</a>
+        </div>
+        <div (click)="setState(materialState)" [ngClass]="{'active': currentState == materialState}" class="tab">
+            <i class="tab-icon icon-color"></i>
+            <a>Color</a>
+        </div>
+        <div (click)="setState(populationState)" [ngClass]="{'active': currentState == populationState}" class="tab">
+            <i class="tab-icon icon-population"></i>
+            <a>Count</a>
+        </div>
+    </div>
+</div>
+
+<img src="assets/images/logo.svg" class="logo" />
+<a (click)="showBuyWindow = true" class="btn buy-btn"><i class="button-icon icon-cart"></i>Add_to_cart</a>
+
+<div [hidden]="!showBuyWindow" class="buy-window">
+  <p>Sorry,this_is_only_the_concept.</p>
+  <p>Idea,code:_Dmitry_Ulmer-Morozov</p>
+  <p>Design:_Denis_Chichkin</p>
+  <a (click)="showBuyWindow=false" class="btn">Confirm</a>
+</div>

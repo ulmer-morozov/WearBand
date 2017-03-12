@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>WearBand</title>
+    <base href="/LetterBand/New/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- <link rel="stylesheet" href="./app/nouislider.css"> -->
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            height: 100%;
+            font-family: "ArcadeClassic";
+            background-color: #50e3c2;
+            background-image: url('assets/images/crosses_bg.svg');
+        }
+
+        @font-face {
+            font-family: 'ArcadeClassic';
+            src: url('assets/fonts/ArcadeClassic.ttf.woff') format('woff'), url('assets/fonts/ArcadeClassic.ttf.svg#ArcadeClassic') format('svg'), url('assets/fonts/ArcadeClassic.ttf.eot'), url('assets/fonts/ArcadeClassic.eot?#iefix') format('embedded-opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        app-root .preloader {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 40pt;
+            margin-top: -20pt;
+        }
+    </style>
+</head>
+
+<body>
+    <app-root>
+        <div class="preloader">Loading</div>
+    </app-root>
+<script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="styles.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body>
+
+</html>
