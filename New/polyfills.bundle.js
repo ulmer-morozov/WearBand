@@ -1353,7 +1353,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * Needed for: All but Chrome, Firefox, Edge, IE11 and Safari 10
  */
 // import 'intl';  // Run `npm install --save intl`.
-//# sourceMappingURL=/Users/ulmer-morozov/Documents/Repos/LetterBand/src/polyfills.js.map
+//# sourceMappingURL=/Users/ulmer-morozov/Documents/Repos/WearBand/src/polyfills.js.map
 
 /***/ }),
 /* 293 */,
