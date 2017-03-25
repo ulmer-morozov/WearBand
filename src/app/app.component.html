@@ -52,6 +52,9 @@
         <div [hidden]="currentState != populationState" class="population panel">
             <div class="label">Count_{{preset.countInCircle}}</div>
             <nouislider [connect]="true" [min]="8" [max]="36" [step]="1" [(ngModel)]="preset.countInCircle" (ngModelChange)="onPopulationChange($event)" class="slider"></nouislider>
+
+            <div class="label">LetterWidth_<span [hidden]="preset.customLetterWidth==0">{{preset.customLetterWidth}}</span><span [hidden]="preset.customLetterWidth!=0">auto</span></div>
+            <nouislider [connect]="true" [min]="10" [max]="360" [step]="1" [(ngModel)]="preset.customLetterWidth" (ngModelChange)="onLetterWidthChange($event)" class="slider"></nouislider>
             <a (click)="setDefaultState()" class="btn">Confirm</a>
         </div>
     </div>

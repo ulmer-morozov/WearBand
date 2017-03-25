@@ -63,7 +63,7 @@ export class AppComponent {
 
         this.letters = Array.from(this.lettersText);
         this.showHelpers = true;
-        this.currentPresetIndex = 7;
+        this.currentPresetIndex = 1;
         this.preset = this.preset = this.clonePreset(this.presets[this.currentPresetIndex]);
         this.savedPreset = this.clonePreset(this.preset);
         this.currentState = this.presentationState;
@@ -293,7 +293,7 @@ export class AppComponent {
 
         let letterWidth;
 
-        if (preset.customLetterWidth != undefined) {
+        if (preset.customLetterWidth != undefined && preset.customLetterWidth != 0) {
             //посчитаем габариты
             letterWidth = preset.customLetterWidth
         } else {
@@ -430,7 +430,12 @@ export class AppComponent {
 
     onPopulationChange = (newValue: number): void => {
         this.preset.countInCircle = newValue;
-        this.preset.customLetterWidth = undefined;
+        this.preset.customLetterWidth = 0;
+        this.redrawBand();
+    }
+
+    onLetterWidthChange = (newValue: number): void => {
+        this.preset.customLetterWidth = newValue;
         this.redrawBand();
     }
 
@@ -474,7 +479,7 @@ export class AppComponent {
             scaleReverse: false,
             countInCircle: 64,
             customStepAngle: undefined,
-            customLetterWidth: undefined
+            customLetterWidth: sourcePreset.customLetterWidth
         }
         this.copyPreset(sourcePreset, newPreset);
         return newPreset;
@@ -515,7 +520,7 @@ export class AppComponent {
 
                 countInCircle: 24,
                 // customStepAngle: Math.PI / 32,
-                customLetterWidth: undefined
+                customLetterWidth: 0
             },
             {
                 symbol: "Z",
@@ -528,7 +533,7 @@ export class AppComponent {
 
                 countInCircle: 12,
                 // customStepAngle: Math.PI / 32,
-                customLetterWidth: undefined
+                customLetterWidth: 0
             },
             {
                 symbol: "B",
@@ -541,7 +546,7 @@ export class AppComponent {
 
                 countInCircle: 12,
                 // customStepAngle: Math.PI / 32,
-                customLetterWidth: undefined
+                customLetterWidth: 0
             },
             {
                 symbol: "A",

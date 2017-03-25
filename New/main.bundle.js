@@ -223,7 +223,7 @@ var AppComponent = (function () {
             var letter = _this.createLetter(symbol, badQuality);
             letter.rotation.set(preset.rotation.x, preset.rotation.y, preset.rotation.z);
             var letterWidth;
-            if (preset.customLetterWidth != undefined) {
+            if (preset.customLetterWidth != undefined && preset.customLetterWidth != 0) {
                 //посчитаем габариты
                 letterWidth = preset.customLetterWidth;
             }
@@ -320,7 +320,11 @@ var AppComponent = (function () {
         };
         this.onPopulationChange = function (newValue) {
             _this.preset.countInCircle = newValue;
-            _this.preset.customLetterWidth = undefined;
+            _this.preset.customLetterWidth = 0;
+            _this.redrawBand();
+        };
+        this.onLetterWidthChange = function (newValue) {
+            _this.preset.customLetterWidth = newValue;
             _this.redrawBand();
         };
         this.onRotationChange = function () {
@@ -358,7 +362,7 @@ var AppComponent = (function () {
                 scaleReverse: false,
                 countInCircle: 64,
                 customStepAngle: undefined,
-                customLetterWidth: undefined
+                customLetterWidth: sourcePreset.customLetterWidth
             };
             _this.copyPreset(sourcePreset, newPreset);
             return newPreset;
@@ -395,7 +399,7 @@ var AppComponent = (function () {
                     scaleReverse: true,
                     countInCircle: 24,
                     // customStepAngle: Math.PI / 32,
-                    customLetterWidth: undefined
+                    customLetterWidth: 0
                 },
                 {
                     symbol: "Z",
@@ -406,7 +410,7 @@ var AppComponent = (function () {
                     scaleReverse: true,
                     countInCircle: 12,
                     // customStepAngle: Math.PI / 32,
-                    customLetterWidth: undefined
+                    customLetterWidth: 0
                 },
                 {
                     symbol: "B",
@@ -417,7 +421,7 @@ var AppComponent = (function () {
                     scaleReverse: true,
                     countInCircle: 12,
                     // customStepAngle: Math.PI / 32,
-                    customLetterWidth: undefined
+                    customLetterWidth: 0
                 },
                 {
                     symbol: "A",
@@ -493,7 +497,7 @@ var AppComponent = (function () {
         this.presets = this.getPresets();
         this.letters = Array.from(this.lettersText);
         this.showHelpers = true;
-        this.currentPresetIndex = 7;
+        this.currentPresetIndex = 1;
         this.preset = this.preset = this.clonePreset(this.presets[this.currentPresetIndex]);
         this.savedPreset = this.clonePreset(this.preset);
         this.currentState = this.presentationState;
@@ -609,7 +613,7 @@ module.exports = "canvas {\n  height: 100vh;\n  width: 100vw;\n  display: block;
 /***/ 459:
 /***/ (function(module, exports) {
 
-module.exports = "<canvas id=\"canvas3d\" width=\"200\" height=\"100\" #canvas></canvas>\n\n<div class=\"controls\">\n\n    <div class=\"control-container\">\n        <!-- Рандом и презеты -->\n        <div [hidden]=\"currentState != randomizeState\" class=\"randomize panel\">\n            <!-- <div (click)=\"setSymbol(letter)\" *ngFor=\"let letter of letters\" class=\"letter-symbol\">{{letter}}</div> -->\n\n            <a (click)=\"nextPreset()\" class=\"btn\">Preset</a>\n            <a (click)=\"restorePreset()\" class=\"btn\">Restore</a>\n\n            <a (click)=\"setDefaultState()\" class=\"btn\">Confirm</a>\n        </div>\n        <!-- Алфавит -->\n        <div [hidden]=\"currentState != chooseLetterState\" class=\"choose-symbol panel\">\n            <div (click)=\"setSymbol(letter)\" *ngFor=\"let letter of letters\" class=\"letter-symbol\">{{letter}}</div>\n            <a (click)=\"setDefaultState()\" class=\"btn padded\">Confirm</a>\n        </div>\n        <!-- Поворот -->\n        <div [hidden]=\"currentState != rotateState\" class=\"choose-rotation panel\">\n            <div class=\"label\">Rotation_Initial_{{rotation.z}}</div>\n            <nouislider [connect]=\"true\" [min]=\"-180\" [max]=\"180\" [step]=\"1\" [(ngModel)]=\"rotation.z\" (ngModelChange)=\"onRotationChange($event)\" class=\"slider\"></nouislider>\n\n            <div class=\"label\">Rotation_step_x_{{stepRotation.x}}</div>\n            <nouislider [connect]=\"true\" [min]=\"0\" [max]=\"20\" [step]=\"1\" [(ngModel)]=\"stepRotation.x\" (ngModelChange)=\"onStepRotationChange($event)\" class=\"slider\"></nouislider>\n\n            <div class=\"label\">Rotation_step_y_{{stepRotation.y}}</div>\n            <nouislider [connect]=\"true\" [min]=\"0\" [max]=\"20\" [step]=\"1\" [(ngModel)]=\"stepRotation.y\" (ngModelChange)=\"onStepRotationChange($event)\" class=\"slider\"></nouislider>\n\n            <div class=\"label\">Rotation_step_z_{{stepRotation.z}}</div>\n            <nouislider [connect]=\"true\" [min]=\"0\" [max]=\"20\" [step]=\"1\" [(ngModel)]=\"stepRotation.z\" (ngModelChange)=\"onStepRotationChange($event)\" class=\"slider\"></nouislider>\n\n            <a (click)=\"setDefaultState()\" class=\"btn\">Confirm</a>\n        </div>\n        <!-- Изменение размера -->\n        <div [hidden]=\"currentState != growState\" class=\"growing panel\">\n            <div class=\"label\">Growing_{{preset.scaleStep.x}}</div>\n            <nouislider [connect]=\"true\" [min]=\"0\" [max]=\"0.2\" [step]=\"0.01\" [(ngModel)]=\"preset.scaleStep.x\" (ngModelChange)=\"onGrowChange($event)\" class=\"slider\"></nouislider>\n            <a (click)=\"setDefaultState()\" class=\"btn\">Confirm</a>\n        </div>\n        <!-- Цвета -->\n        <div [hidden]=\"currentState != materialState\" class=\"choose-material panel\">\n            <div class=\"material-probes\">\n                <div (click)=\"setMaterial(color)\" *ngFor=\"let color of colors\" class=\"material-probe\">\n                    <div [style.background-color]=\"color\" class=\"probe-icon\"></div>\n                </div>\n            </div>\n            <a (click)=\"setDefaultState()\" class=\"btn padded\">Confirm</a>\n        </div>\n        <!-- Количество букв -->\n        <div [hidden]=\"currentState != populationState\" class=\"population panel\">\n            <div class=\"label\">Count_{{preset.countInCircle}}</div>\n            <nouislider [connect]=\"true\" [min]=\"8\" [max]=\"36\" [step]=\"1\" [(ngModel)]=\"preset.countInCircle\" (ngModelChange)=\"onPopulationChange($event)\" class=\"slider\"></nouislider>\n            <a (click)=\"setDefaultState()\" class=\"btn\">Confirm</a>\n        </div>\n    </div>\n\n    <div class=\"tabs\">\n        <div (click)=\"setState(randomizeState)\" [ngClass]=\"{'active': currentState == randomizeState}\" class=\"tab\">\n            <i class=\"tab-icon icon-random\"></i>\n            <a>Random</a>\n        </div>\n        <div (click)=\"setState(chooseLetterState)\" [ngClass]=\"{'active': currentState == chooseLetterState}\" class=\"tab\">\n            <i class=\"tab-icon icon-letters\"></i>\n            <a>Text</a>\n        </div>\n        <div (click)=\"setState(rotateState)\" [ngClass]=\"{'active': currentState == rotateState}\" class=\"tab\">\n            <i class=\"tab-icon icon-rotate\"></i>\n            <a>Rotate</a>\n        </div>\n        <div (click)=\"setState(growState)\" [ngClass]=\"{'active': currentState == growState}\" class=\"tab\">\n            <i class=\"tab-icon icon-size\"></i>\n            <a>Size</a>\n        </div>\n        <div (click)=\"setState(materialState)\" [ngClass]=\"{'active': currentState == materialState}\" class=\"tab\">\n            <i class=\"tab-icon icon-color\"></i>\n            <a>Color</a>\n        </div>\n        <div (click)=\"setState(populationState)\" [ngClass]=\"{'active': currentState == populationState}\" class=\"tab\">\n            <i class=\"tab-icon icon-population\"></i>\n            <a>Count</a>\n        </div>\n    </div>\n</div>\n\n<img src=\"assets/images/logo.svg\" class=\"logo\" />\n<a (click)=\"showBuyWindow = true\" class=\"btn buy-btn\"><i class=\"button-icon icon-cart\"></i>Add_to_cart</a>\n\n<div [hidden]=\"!showBuyWindow\" class=\"buy-window\">\n  <p>Sorry,this_is_only_the_concept.</p>\n  <p>Idea,code:_Dmitry_Ulmer-Morozov</p>\n  <p>Design:_Denis_Chichkin</p>\n  <a (click)=\"showBuyWindow=false\" class=\"btn\">Confirm</a>\n</div>\n"
+module.exports = "<canvas id=\"canvas3d\" width=\"200\" height=\"100\" #canvas></canvas>\n\n<div class=\"controls\">\n\n    <div class=\"control-container\">\n        <!-- Рандом и презеты -->\n        <div [hidden]=\"currentState != randomizeState\" class=\"randomize panel\">\n            <!-- <div (click)=\"setSymbol(letter)\" *ngFor=\"let letter of letters\" class=\"letter-symbol\">{{letter}}</div> -->\n\n            <a (click)=\"nextPreset()\" class=\"btn\">Preset</a>\n            <a (click)=\"restorePreset()\" class=\"btn\">Restore</a>\n\n            <a (click)=\"setDefaultState()\" class=\"btn\">Confirm</a>\n        </div>\n        <!-- Алфавит -->\n        <div [hidden]=\"currentState != chooseLetterState\" class=\"choose-symbol panel\">\n            <div (click)=\"setSymbol(letter)\" *ngFor=\"let letter of letters\" class=\"letter-symbol\">{{letter}}</div>\n            <a (click)=\"setDefaultState()\" class=\"btn padded\">Confirm</a>\n        </div>\n        <!-- Поворот -->\n        <div [hidden]=\"currentState != rotateState\" class=\"choose-rotation panel\">\n            <div class=\"label\">Rotation_Initial_{{rotation.z}}</div>\n            <nouislider [connect]=\"true\" [min]=\"-180\" [max]=\"180\" [step]=\"1\" [(ngModel)]=\"rotation.z\" (ngModelChange)=\"onRotationChange($event)\" class=\"slider\"></nouislider>\n\n            <div class=\"label\">Rotation_step_x_{{stepRotation.x}}</div>\n            <nouislider [connect]=\"true\" [min]=\"0\" [max]=\"20\" [step]=\"1\" [(ngModel)]=\"stepRotation.x\" (ngModelChange)=\"onStepRotationChange($event)\" class=\"slider\"></nouislider>\n\n            <div class=\"label\">Rotation_step_y_{{stepRotation.y}}</div>\n            <nouislider [connect]=\"true\" [min]=\"0\" [max]=\"20\" [step]=\"1\" [(ngModel)]=\"stepRotation.y\" (ngModelChange)=\"onStepRotationChange($event)\" class=\"slider\"></nouislider>\n\n            <div class=\"label\">Rotation_step_z_{{stepRotation.z}}</div>\n            <nouislider [connect]=\"true\" [min]=\"0\" [max]=\"20\" [step]=\"1\" [(ngModel)]=\"stepRotation.z\" (ngModelChange)=\"onStepRotationChange($event)\" class=\"slider\"></nouislider>\n\n            <a (click)=\"setDefaultState()\" class=\"btn\">Confirm</a>\n        </div>\n        <!-- Изменение размера -->\n        <div [hidden]=\"currentState != growState\" class=\"growing panel\">\n            <div class=\"label\">Growing_{{preset.scaleStep.x}}</div>\n            <nouislider [connect]=\"true\" [min]=\"0\" [max]=\"0.2\" [step]=\"0.01\" [(ngModel)]=\"preset.scaleStep.x\" (ngModelChange)=\"onGrowChange($event)\" class=\"slider\"></nouislider>\n            <a (click)=\"setDefaultState()\" class=\"btn\">Confirm</a>\n        </div>\n        <!-- Цвета -->\n        <div [hidden]=\"currentState != materialState\" class=\"choose-material panel\">\n            <div class=\"material-probes\">\n                <div (click)=\"setMaterial(color)\" *ngFor=\"let color of colors\" class=\"material-probe\">\n                    <div [style.background-color]=\"color\" class=\"probe-icon\"></div>\n                </div>\n            </div>\n            <a (click)=\"setDefaultState()\" class=\"btn padded\">Confirm</a>\n        </div>\n        <!-- Количество букв -->\n        <div [hidden]=\"currentState != populationState\" class=\"population panel\">\n            <div class=\"label\">Count_{{preset.countInCircle}}</div>\n            <nouislider [connect]=\"true\" [min]=\"8\" [max]=\"36\" [step]=\"1\" [(ngModel)]=\"preset.countInCircle\" (ngModelChange)=\"onPopulationChange($event)\" class=\"slider\"></nouislider>\n\n            <div class=\"label\">LetterWidth_<span [hidden]=\"preset.customLetterWidth==0\">{{preset.customLetterWidth}}</span><span [hidden]=\"preset.customLetterWidth!=0\">auto</span></div>\n            <nouislider [connect]=\"true\" [min]=\"10\" [max]=\"360\" [step]=\"1\" [(ngModel)]=\"preset.customLetterWidth\" (ngModelChange)=\"onLetterWidthChange($event)\" class=\"slider\"></nouislider>\n            <a (click)=\"setDefaultState()\" class=\"btn\">Confirm</a>\n        </div>\n    </div>\n\n    <div class=\"tabs\">\n        <div (click)=\"setState(randomizeState)\" [ngClass]=\"{'active': currentState == randomizeState}\" class=\"tab\">\n            <i class=\"tab-icon icon-random\"></i>\n            <a>Random</a>\n        </div>\n        <div (click)=\"setState(chooseLetterState)\" [ngClass]=\"{'active': currentState == chooseLetterState}\" class=\"tab\">\n            <i class=\"tab-icon icon-letters\"></i>\n            <a>Text</a>\n        </div>\n        <div (click)=\"setState(rotateState)\" [ngClass]=\"{'active': currentState == rotateState}\" class=\"tab\">\n            <i class=\"tab-icon icon-rotate\"></i>\n            <a>Rotate</a>\n        </div>\n        <div (click)=\"setState(growState)\" [ngClass]=\"{'active': currentState == growState}\" class=\"tab\">\n            <i class=\"tab-icon icon-size\"></i>\n            <a>Size</a>\n        </div>\n        <div (click)=\"setState(materialState)\" [ngClass]=\"{'active': currentState == materialState}\" class=\"tab\">\n            <i class=\"tab-icon icon-color\"></i>\n            <a>Color</a>\n        </div>\n        <div (click)=\"setState(populationState)\" [ngClass]=\"{'active': currentState == populationState}\" class=\"tab\">\n            <i class=\"tab-icon icon-population\"></i>\n            <a>Count</a>\n        </div>\n    </div>\n</div>\n\n<img src=\"assets/images/logo.svg\" class=\"logo\" />\n<a (click)=\"showBuyWindow = true\" class=\"btn buy-btn\"><i class=\"button-icon icon-cart\"></i>Add_to_cart</a>\n\n<div [hidden]=\"!showBuyWindow\" class=\"buy-window\">\n  <p>Sorry,this_is_only_the_concept.</p>\n  <p>Idea,code:_Dmitry_Ulmer-Morozov</p>\n  <p>Design:_Denis_Chichkin</p>\n  <a (click)=\"showBuyWindow=false\" class=\"btn\">Confirm</a>\n</div>\n"
 
 /***/ }),
 

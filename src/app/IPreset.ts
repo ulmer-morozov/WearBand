@@ -11,5 +11,5 @@ interface IPreset {
     countInCircle: number;
 
     customStepAngle?: number;
-    customLetterWidth?: number;
+    customLetterWidth: number;
 }
