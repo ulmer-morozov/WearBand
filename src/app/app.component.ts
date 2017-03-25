@@ -63,7 +63,7 @@ export class AppComponent {
 
         this.letters = Array.from(this.lettersText);
         this.showHelpers = true;
-        this.currentPresetIndex = 1;
+        this.currentPresetIndex = 7;
         this.preset = this.preset = this.clonePreset(this.presets[this.currentPresetIndex]);
         this.savedPreset = this.clonePreset(this.preset);
         this.currentState = this.presentationState;
